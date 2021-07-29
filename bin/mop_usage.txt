@@ -1,0 +1,30 @@
+ Don't forget to install and activate the conda environment before running the workflow otherwise the tools won't work properly.
+
+ Bash mop_wrapper.sh 	[-h] [-o <name>]
+			[-i <file>] [-r <file>] [-a <file>]
+			[-f yes | no] [-q yes | no] [-m minimap2 | graphmap2 | no] 
+			[-c nanocount | htseqcount | no] [-p yes | no] [-b yes | no]
+			[-z "options"] [-y "options"] [-x "options"] [-w "options"]
+
+ General options:
+  -h		show mop_usage.txt and exit
+  -o		Specify name of output folder (if not given workflow wil generate name automatically)
+
+ Input files:
+  -i		path to input.fastq
+  -r		path to reference.fasta
+  -a		path to annotation.gtf
+
+ Tool selections:
+  -f		Specify if reads should be filtered using NanoFilt or skipped		(yes (default) or no)
+  -q		Specify if QC of reads should be performed using FastQC	or skipped	(yes (default) or no)
+  -m		Specify mapping tool that will be used or start with aligned reads	(minimap2 (default), graphmap2 or no)
+  -c		Specify counting tool that wil be used or skipped			(featurecounts (default), htseqcount or no)
+  -p		Specify if QC of aligned reads with NanoPlot should be run or skipped	(yes (default) or no)
+  -b		Specify if QC of aligned reads with bam2stats should be run or skipped	(yes (default) or no)
+
+ Tool options:
+  -z "N"	Specify specific tool options inbetween " ", for NanoFilt 		(for usage use NanoFilt -h)
+  -y "N"	Specify specific tool options inbetween " ", for selected mapping tool 	(for usage use minimap2 -h or graphmap2 align -h)
+  -x "N"	Specify specific tool options inbetween " ", for selected counting tool	(for usage use featureCounts -h or htseq-count -h)
+  -w "N"	Specify specific tool options inbetween " ", for NanoPlot		(for usage use NanoPlot -h)
