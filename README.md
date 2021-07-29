@@ -10,6 +10,12 @@ For the future, it is planned to implement automated DESEq2 analysis in the work
 
 ****
 
+The data used to test this pipeline is included in the repository. The article the data is taken from is as follows:
+
+Exploring prokaryotic transcription, operon structures, rRNA maturation and modifications using Nanopore-based native RNA sequencing
+Felix Grünberger, Robert Knüppel, Michael Jüttner, Martin Fenk, Andreas Borst, Robert Reichelt, Winfried Hausner, Jörg Soppa, Sébastien Ferreira-Cerca, Dina Grohmann
+bioRxiv 2019.12.18.880849; doi: https://doi.org/10.1101/2019.12.18.880849
+
 The created pipeline consists of two parts: preprocess and differential expression analysis. Preprocess is always the first step that needs to be performed. For this the following usage is included. When wanting to call the bash script of this workflow please use the following usage as documentation:
 
 **Usage:**
