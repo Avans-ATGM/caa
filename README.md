@@ -10,6 +10,8 @@ For the future, it is planned to implement automated DESEq2 analysis in the work
 
 ****
 
+The created pipeline consists of two parts: preprocess and differential expression analysis. Preprocess is always the first step that needs to be performed. For this the following usage is included. When wanting to call the bash script of this workflow please use the following usage as documentation:
+
 **Usage:**
  Bash mop_workflow.sh [-h] [-o <file>] [-i <file>] [-r <file>] [-a file]
 	
@@ -42,3 +44,14 @@ For the future, it is planned to implement automated DESEq2 analysis in the work
 	-y "N"		Specify specific tool options between " ", for selected mapping tool. (for usage check tool's github at: https://github.com/lh3/minimap2 or https://github.com/lbcb-sci/graphmap2)
 	-x "N"		Specify specific tool options between " ", for selected counting tool. (for usage check tool's github at: https://github.com/a-slide/NanoCount or https://github.com/htseq/htseq)
 	-w "N"		Specify specific tool options between " ", for NanoPlot plotting tool. (for usage check tool's github at: https://github.com/wdecoster/NanoPlot)
+
+	
+	
+When having performed the preprocess the htseq-count or nanocount files can be accessed. If you want to perform differential expression analysis take the following steps into account:
+	
+	Move all count files to the following folder: ***deseq2/deseq_input/***
+	Call the ***deseq2_run.sh*** file to perform differential expression analysis
+	The script will create a new file: ***readCounts.csv*** which concatenates all count files into one file.
+	The script will create a new folder: ***deseq2_output***: and place a output .pdf and .csv file in it.
+	
+If you want to perform another differential expression analysis please make sure the ***deseq_input*** folder does not include any files you do not want to take into consideration. Also, please remove any old ***readCounts.csv*** files as the program will not be able to perform a concatenation of the count files if a ***readCounts.csv*** already exists.
