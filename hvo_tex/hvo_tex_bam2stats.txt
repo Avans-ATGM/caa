@@ -1,0 +1,2 @@
+#File name	Mapped reads	Map %	Bases	Bases %	Avg read length	Max read length	identity
+mop_tempdir/output/hvo_tex_graphmap2.bam	424,028	100.0%	330,615,499	93.6%	832	5,919	80.10%
