@@ -1,0 +1,2 @@
+#File name	Mapped reads	Map %	Bases	Bases %	Avg read length	Max read length	identity
+mop_tempdir/output/ecoli_tex_graphmap2.bam	468,434	100.0%	327,892,650	93.4%	749	9,992	81.26%
