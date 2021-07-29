@@ -1,0 +1,153 @@
+---
+title: "Differential Analysis Using DESeq2"
+author: "Made By honhon & mop"
+date: "5/20/2021"
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+false=FALSE
+true=TRUE
+```
+
+```{r, eval=false, echo=false}
+install.packages(c("roxygen2","devtools"))
+install.packages(c('dplyr','gplots','ggplot2','ggrepel'))
+```
+
+```{r, eval=false, echo=false}
+BiocManager::install(c('limma','DESeq2','AnnotationDbi','org.Mm.eg.db','ReportingTools','GO.db','GOstats','pathview','gage','gageData','select'))
+```
+
+
+```{r, message=false, echo=false}
+library(DESeq2)
+library(dplyr)
+
+countData = read.csv('readCounts.csv', header=1)
+```
+
+
+```{r, echo=false}
+rownames(countData) = countData$ID
+countData = countData[,-1]
+countData <- countData+1
+
+```
+
+```{r, message=false, echo=false}
+logCountData = log2(1+countData)
+```
+
+```{r, message=false, echo=false}
+treatment=c("tex", "notex", "tex", "notex")
+species = c("ecoli", "ecoli", "hvo", "hvo")
+```
+
+
+```{r, message=false, echo=false, warning=FALSE}
+colData = as.data.frame(cbind(colnames(countData),treatment,species))
+```
+
+
+```{r, message=false, echo=false, warning=FALSE}
+dds = DESeqDataSetFromMatrix(countData = countData, 
+                             colData = colData, 
+                             design = ~treatment+species)
+dds = DESeq(dds)
+```
+
+
+```{r, message=false, echo=false}
+dds = dds[rowSums(counts(dds)) >5,]
+```
+
+
+```{r, message=false, echo=false}
+```
+
+Principal Component Analysis Plots
+
+```{r, message=false, echo=false}
+library(ggplot2)
+rld = rlog(dds)
+plotPCA(rld, intgroup = "treatment")
+plotPCA(rld, intgroup = "species")
+plotPCA(rld, intgroup = c("treatment","species"))
+```
+
+
+
+```{r, message=false, echo=false}
+detectGroups <- function (x){  # x are col names
+  tem <- gsub("[0-9]*$","",x) # Remove all numbers from end
+  #tem = gsub("_Rep|_rep|_REP","",tem)
+  tem <- gsub("_$","",tem); # remove "_" from end
+  tem <- gsub("_Rep$","",tem); # remove "_Rep" from end
+  tem <- gsub("_rep$","",tem); # remove "_rep" from end
+  tem <- gsub("_REP$","",tem)  # remove "_REP" from end
+  return( tem )
+}
+dist2 <- function(x, ...)   # distance function = 1-PCC (Pearson's correlation coefficient)
+  as.dist(1-cor(t(x), method="pearson"))
+```
+
+```{r, message=false, echo=false}
+```
+
+```{r, echo=false}
+res = results(dds)
+res
+```
+
+```{r, message=false, echo=false}
+res = results(dds, lfcThreshold = 0.05)
+```
+
+Scatter Plot of Log2 Fold Changes versus Mean of Normalized Counts (MA-Plot)
+
+```{r, message=false, echo=false}
+DESeq2::plotMA(res,ylim=c(-5,5))
+```
+
+```{r, message=false, echo=false}
+library(dplyr)
+res1 = as.data.frame(res)
+
+res1 = mutate(res1, sig=ifelse(res1$padj<0.1,"FDR<0.1","Not Sig"))
+res1[which(abs(res1$log2FoldChange)<1.0), "sig"]="Not Sig"
+```
+
+Volcano Plot
+
+```{r, message=false, echo=false, warning=false}
+library(ggplot2)
+ggplot(res1,aes(log2FoldChange,-log10(padj))) + geom_point(aes(col=sig))+scale_color_manual(values=c("red","black"))
+
+```
+
+
+
+
+```{r, message=false, echo=false}
+library(AnnotationDbi)
+library(org.Mm.eg.db)
+```
+
+```{r, message=false, echo=false}
+res = res[order(abs(res$log2FoldChange), decreasing = true), ]
+res
+```
+
+
+
+
+
+
+```{r, message=false, echo=false}
+write.csv(res, file="deseq2_output.csv")
+```
