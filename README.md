@@ -6,8 +6,6 @@ Long-read genome sequencing is being used more and more in the past decade. With
 
 The produced workflow includes all steps needed to do the preprocessing of FASTQ files produced by Nanopore direct RNA sequencing for later downstream processing except for quality control of the raw and trimmed data. It allows users a choice of different tools with an option to change their settings manually or use the basic settings. This makes it easier for the general user to analyze Nanopore direct RNA-seq data. 
 
-For the future, it is planned to implement automated DESEq2 analysis in the workflow and the NanoTail and NanoMod modules from the original Masters of Pores workflow, as well as adding new ease of use options and converting the wrapper to a more convenient language like Nextflow. Further testing with the current and new datasets should also be performed to remove any kinks that are still present and to better test Graphmap2 and HTSeq-count. This all to make an easy to use RNA-seq analysis tool.
-
 ****
 
 The data used to test this pipeline is included in the repository. The article the data is taken from is as follows:
@@ -19,37 +17,36 @@ bioRxiv 2019.12.18.880849; doi: https://doi.org/10.1101/2019.12.18.880849
 The created pipeline consists of two parts: preprocess and differential expression analysis. Preprocess is always the first step that needs to be performed. For this the following usage is included. When wanting to call the bash script of this workflow please use the following usage as documentation:
 
 **Usage:**
- Bash mop_workflow.sh [-h] [-o <file>] [-i <file>] [-r <file>] [-a file]
-	
-	[-m minimap2 | graphmap2] [-c nanocount | htseqcount] [-d yes | no] [-t yes | no] [-n yes | no]
-	
-	[-z "N"] [-y "N"] [-x "N"] [-w "N"]
+ Don't forget to install and activate the conda environment before running the workflow otherwise the tools won't work properly.
+
+ Bash mop_wrapper.sh 	[-h] [-o <name>]
+			[-i <file>] [-r <file>] [-a <file>]
+			[-f yes | no] [-q yes | no] [-m minimap2 | graphmap2 | no] 
+			[-c nanocount | htseqcount | no] [-p yes | no] [-b yes | no]
+			[-z "options"] [-y "options"] [-x "options"] [-w "options"]
 
  General options:
-  
-	-h		show the help and exit.
-	-o		Specify directory name in which ouput is copied. (workflow will create the output directory)
+  -h		show mop_usage.txt and exit
+  -o		Specify name of output folder (if not given workflow wil generate name automatically)
 
- Input data:
-	
-	-i		path to fastq.gz file.
-	-r		path to reference.gz file.
-	-a		path to gff.gz file.
+ Input files:
+  -i		path to input.fastq
+  -r		path to reference.fasta
+  -a		path to annotation.gtf
 
- Tool and module selections:
-  
-	-m		Specify mapping tool that will be used. (minimap2 or graphmap2)
-	-c		Specify counting tool. (nanocount or htseqcount)
-	-d		Specify if DESeq2 should be run. (yes or no)
-	-t		Specify if NanoTail should be run. (yes or no)
-	-n		Specify if NanoMod should be run. (yes or no)
+ Tool selections:
+  -f		Specify if reads should be filtered using NanoFilt or skipped		(yes (default) or no)
+  -q		Specify if QC of reads should be performed using FastQC	or skipped	(yes (default) or no)
+  -m		Specify mapping tool that will be used or start with aligned reads	(minimap2 (default), graphmap2 or no)
+  -c		Specify counting tool that wil be used or skipped			(featurecounts (default), htseqcount or no)
+  -p		Specify if QC of aligned reads with NanoPlot should be run or skipped	(yes (default) or no)
+  -b		Specify if QC of aligned reads with bam2stats should be run or skipped	(yes (default) or no)
 
- Seperate tool options:
-  
-	-z "N"		Specify specific tool options between " ", for NanoFilt filter tool. (for usage check tool's github at: https://github.com/wdecoster/nanofilt)
-	-y "N"		Specify specific tool options between " ", for selected mapping tool. (for usage check tool's github at: https://github.com/lh3/minimap2 or https://github.com/lbcb-sci/graphmap2)
-	-x "N"		Specify specific tool options between " ", for selected counting tool. (for usage check tool's github at: https://github.com/a-slide/NanoCount or https://github.com/htseq/htseq)
-	-w "N"		Specify specific tool options between " ", for NanoPlot plotting tool. (for usage check tool's github at: https://github.com/wdecoster/NanoPlot)
+ Tool options:
+  -z "N"	Specify specific tool options inbetween " ", for NanoFilt 		(for usage use NanoFilt -h)
+  -y "N"	Specify specific tool options inbetween " ", for selected mapping tool 	(for usage use minimap2 -h or graphmap2 align -h)
+  -x "N"	Specify specific tool options inbetween " ", for selected counting tool	(for usage use featureCounts -h or htseq-count -h)
+  -w "N"	Specify specific tool options inbetween " ", for NanoPlot		(for usage use NanoPlot -h)
 
 	
 	
